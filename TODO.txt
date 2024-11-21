@@ -1,0 +1,5 @@
+Implementar DTO
+-> Encontrar maneira funcional de utilizar DTO
+-> Utilizar esse DTO para receber as propriedades de uma order no use case
+-> criar uma entidade order a partir dessa DTO
+-> continuar implementação da arquitetura
