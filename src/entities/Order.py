@@ -1,4 +1,4 @@
-class Pedido:
+class Order:
     def __init__(self,id : int, itens : dict, status: int, price: int):
         self._id = id
         self._itens = itens
