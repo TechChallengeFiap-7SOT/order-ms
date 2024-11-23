@@ -1,2 +1,9 @@
+from dataclasses import dataclass
+
+@dataclass
 class OrderDTO:
-    pass
+    
+    id: int
+    itens: dict
+    status: int
+    price: int
