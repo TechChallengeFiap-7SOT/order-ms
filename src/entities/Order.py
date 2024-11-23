@@ -1,12 +1,12 @@
 class Order:
-    def __init__(self,id : int, itens : dict, status: int, price: int):
+    def __init__(self,id : str, itens : dict, status: int, price: int):
         self._id = id
         self._itens = itens
         self._status = status
         self._price = price
     
     @property
-    def id(self) -> int:
+    def id(self) -> str:
         return self._id
     
     @property

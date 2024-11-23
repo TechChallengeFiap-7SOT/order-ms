@@ -3,7 +3,7 @@ from dataclasses import dataclass
 @dataclass
 class OrderDTO:
     
-    id: int
+    id: str = None
     itens: dict
-    status: int
+    status: int = None
     price: int
