@@ -2,8 +2,14 @@ from abc import ABC, abstractmethod
 from typing import List, Optional
 
 
-class ExampleExternalInterface(ABC):
-     
+class PaymentExternalInterface(ABC):
+    
     @abstractmethod 
-    def example(x: str) -> Optional[1]: 
+    def requestPayment(id: int, price: int) -> Optional[int]: 
+        pass
+    
+class ProductionExternalInterface(ABC):
+    
+    @abstractmethod
+    def requestProduction(id: int, itens: dict) -> Optional[bool]:
         pass
