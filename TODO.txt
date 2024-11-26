@@ -1,1 +1,5 @@
-Implementar DTO
+Continuar implantação da arquitetura, parei no order controller, implementandoo o método
+'confirmOrderPayment', que será chamado pela webhook. depois disso, lembrar que após o pagamento
+ser confirmado, a aplicação deve chamar o microserviço de confecção do pedido.
+
+após isso, implementar banco de dados e flask

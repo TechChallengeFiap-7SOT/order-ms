@@ -1,15 +1,28 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
+from ..DTO.OrderDTO import OrderDTO
 
-class PaymentExternalInterface(ABC):
-    
-    @abstractmethod 
-    def requestPayment(id: int, price: int) -> Optional[int]: 
-        pass
-    
-class ProductionExternalInterface(ABC):
+class OrderExternalInterface:
     
     @abstractmethod
-    def requestProduction(id: int, itens: dict) -> Optional[bool]:
+    def get(orderID: str):
+        pass
+    
+    @abstractmethod
+    def create(orderDTO: OrderDTO):
+        pass
+    
+    @abstractmethod
+    def Delete(orderID: str):
+        pass
+    
+    @abstractmethod
+    def Change(orderID: str, orderStatus: int):
+        pass
+
+class PaymentExternalInterface:
+    
+    @abstractmethod
+    def request(id, price):
         pass

@@ -19,4 +19,16 @@ class OrderGatewayInterface(ABC):
     @abstractmethod 
     def changeOrderStatus(id: str, status: int) -> Optional[Order]: 
         pass
+    
 
+class PaymentGatewayInterface(ABC):
+    
+    @abstractmethod 
+    def requestPayment(id: int, price: int) -> Optional[int]: 
+        pass
+    
+class ProductionGatewayInterface(ABC):
+    
+    @abstractmethod
+    def requestProduction(id: int, itens: dict) -> Optional[bool]:
+        pass
