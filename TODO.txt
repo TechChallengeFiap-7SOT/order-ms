@@ -1,5 +1,2 @@
-Continuar implantação da arquitetura, parei no order controller, implementandoo o método
-'confirmOrderPayment', que será chamado pela webhook. depois disso, lembrar que após o pagamento
-ser confirmado, a aplicação deve chamar o microserviço de confecção do pedido.
+testar a implementação do banco de dados, finalizar a implementação do método getOrder no controller, terminar a API.
 
-após isso, implementar banco de dados e flask
