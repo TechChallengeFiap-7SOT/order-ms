@@ -26,6 +26,11 @@ class OrderUseCases:
         #     raise Exception("Houve um problema ao salvar uma ordem criada no repositório de dados.")
                 
         return newOrder
+    
+    @staticmethod
+    def getORder(orderId: str, orderGateway: OrderGatewayInterface):
+        order = orderGateway.getOrder(orderId)
+        return order
 
     @staticmethod
     def confirmPaymentStatus(order: Order, orderGateway: OrderGatewayInterface):
@@ -33,6 +38,14 @@ class OrderUseCases:
             raise Exception("Essa order já teve seu pagamento confirmado.")
         
         newOrder = OrderUseCases.modifyStatus(order, 3, orderGateway)
+        return newOrder
+    
+    @staticmethod
+    def productionRequestOrderStatus(order: Order, orderGateway: OrderGatewayInterface):
+        if order.status >= 4:
+            raise Exception("Essa order já teve sua solicitação de produção feita.")
+        
+        newOrder = OrderUseCases.modifyStatus(order, 4, orderGateway)
         return newOrder
     
     @staticmethod

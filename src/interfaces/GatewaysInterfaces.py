@@ -30,5 +30,5 @@ class PaymentGatewayInterface(ABC):
 class ProductionGatewayInterface(ABC):
     
     @abstractmethod
-    def requestProduction(id: int, itens: dict) -> Optional[bool]:
+    def requestProduction(order: Order) -> Optional[bool]:
         pass

@@ -1,11 +1,13 @@
 from ..usecases.OrderUseCases import OrderUseCases
 from ..usecases.PaymentUseCases import PaymentUseCases
+from ..usecases.ProductionUseCases import ProductionUseCases
 from ..DTO.OrderDTO import OrderDTO
 
-from ..interfaces.ExternalInterfaces import OrderExternalInterface, PaymentExternalInterface
+from ..interfaces.ExternalInterfaces import OrderExternalInterface, PaymentExternalInterface, ProductionExternalInterface
 from ..interfaces.AdapterInterfaces import OrderAdapterInterface
 from ..gateways.OrderGateway import OrderGateway
 from ..gateways.PaymentGateway import PaymentGateway
+from ..gateways.ProductionGateway import ProductionGateway
 from ..entities.Order import Order
 
 class OrderController:
@@ -32,18 +34,44 @@ class OrderController:
         return response
     
     @staticmethod
+    def getOrder(orderId: str,  
+                     orderDb: OrderExternalInterface,
+                     orderAdapter: OrderAdapterInterface):
+        
+        orderGateway = OrderGateway(orderDb)
+        order = OrderUseCases.getORder(orderId, orderGateway)
+        orderDTO = OrderDTO(order.id, order.itens, order.status, order.price)
+        response = orderAdapter.orderToJson(orderDTO)
+        
+        return response
+    
+    @staticmethod
     def confirmOrderPayment(orderId: str,  
                      orderDb: OrderExternalInterface):
         
         orderGateway = OrderGateway(orderDb)
-        
         orderDTO = orderGateway.getOrder(orderId)
-        
         order = OrderController.OrderDtoToEntitie(orderDTO)
         
         confirmedPaymentOrder = OrderUseCases.confirmPaymentStatus(order, orderGateway)
+                
+        return "{'status' : 'ok'}"
+    
+    @staticmethod
+    def requestOrderProduction(orderId: str, 
+                               orderDb: OrderExternalInterface,
+                               productionExternal: ProductionExternalInterface):
+        
+        orderGateway = OrderGateway(orderDb)
+        orderDTO = orderGateway.getOrder(orderId)
+        order = OrderController.OrderDtoToEntitie(orderDTO)
+        
+        productionGateway = ProductionGateway(productionExternal)
+        
+        order = ProductionUseCases.requestProduction(order, productionGateway ,orderGateway)
         
         return "{'status' : 'ok'}"
+        
     
     @staticmethod 
     def OrderDtoToEntitie(orderDto: OrderDTO):

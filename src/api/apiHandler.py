@@ -2,6 +2,7 @@ from ..controller.OrderController import OrderController
 from ..DTO.OrderDTO import OrderDTO
 from ..external.OrderDbConn import OrderDbConnector
 from ..external.PaymentApi import PaymentApi
+from ..external.ProductionApi import ProductionApi
 from ..adapters.OrderAdapter import OrderAdapter
 
 class ApiHandler():
@@ -22,4 +23,10 @@ class ApiHandler():
     
     @staticmethod
     def webhookApi(orderId):
-        pass
+        
+        orderDbConn = OrderDbConnector()
+        response = OrderController.confirmOrderPayment(orderId, orderDbConn)
+        
+        response = OrderController.requestOrderProduction(orderId, orderDbConn, ProductionApi)
+        
+        return response

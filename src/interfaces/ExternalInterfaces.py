@@ -6,23 +6,29 @@ from ..DTO.OrderDTO import OrderDTO
 class OrderExternalInterface:
     
     @abstractmethod
-    def get(orderID: str):
+    def get(orderID: str) -> Optional[OrderDTO]:
         pass
     
     @abstractmethod
-    def create(orderDTO: OrderDTO):
+    def create(orderDTO: OrderDTO) -> Optional[OrderDTO]:
         pass
     
     @abstractmethod
-    def Delete(orderID: str):
+    def Delete(orderID: str) -> Optional[int]:
         pass
     
     @abstractmethod
-    def Change(orderID: str, orderStatus: int):
+    def Change(orderID: str, orderStatus: int) -> Optional[OrderDTO]:
         pass
 
 class PaymentExternalInterface:
     
     @abstractmethod
     def request(id, price):
+        pass
+
+class ProductionExternalInterface:
+    
+    @abstractmethod
+    def requestProductionAPi(orderDTO: OrderDTO):
         pass
