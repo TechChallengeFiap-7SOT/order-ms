@@ -1,3 +1,5 @@
 .env
 /testes.py
 /venv
+**/__pycache__/
+app.log

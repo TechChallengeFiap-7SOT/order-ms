@@ -34,7 +34,7 @@ class OrderController:
         return response
     
     @staticmethod
-    def getOrder(orderId: str,  
+    def getOrder(orderId: str,
                      orderDb: OrderExternalInterface,
                      orderAdapter: OrderAdapterInterface):
         

@@ -6,13 +6,21 @@ import sqlite3
 from typing import List, Optional
 import json
 
+from dotenv import load_dotenv
+import os
+
+# Carregar variáveis do arquivo .env
+load_dotenv()
+
+
 class OrderDbConnector(OrderExternalInterface):
     
     def __init__(self):
         super().__init__()
+        self._databaseIp = os.getenv('DATABASE_URL')
     
     def create(self, orderDTO: OrderDTO) -> Optional[OrderDTO]:
-        conn = sqlite3.connect("data.db")
+        conn = sqlite3.connect(self._databaseIp)
         cursor = conn.cursor()
         cursor.execute(
             "INSERT INTO Orders (id, items, status, price) VALUES (?, ?, ?, ?)",

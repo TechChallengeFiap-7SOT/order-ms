@@ -12,8 +12,10 @@ class OrderGateway(OrderGatewayInterface):
         self._orderDb = orderDb
         
     def getOrder(self, id: str) -> Optional[Order]: 
-        print("Retornando DTO da order...")
-        return True
+        # print("Retornando DTO da order...")
+        orderDto = self._orderDb.get(id)
+        order = Order(orderDto.id, orderDto.itens, orderDto.status, orderDto.price)
+        return order
     
     def createOrder(self, id : str, itens : dict, status: int, price: int) -> Optional[Order]: 
         orderDto = OrderDTO(id, itens, status, price)
@@ -24,6 +26,8 @@ class OrderGateway(OrderGatewayInterface):
         return True
     
     def changeOrderStatus(self, id: str, status: int) -> Optional[Order]: 
-        return True
+        orderDto = self._orderDb.Change(id, status)
+        order = Order(orderDto.id, orderDto.itens, orderDto.status, orderDto.price)
+        return order
         
         

@@ -34,7 +34,7 @@ class OrderUseCases:
 
     @staticmethod
     def confirmPaymentStatus(order: Order, orderGateway: OrderGatewayInterface):
-        if order.status == 3:
+        if order.status >= 3:
             raise Exception("Essa order já teve seu pagamento confirmado.")
         
         newOrder = OrderUseCases.modifyStatus(order, 3, orderGateway)
@@ -42,6 +42,7 @@ class OrderUseCases:
     
     @staticmethod
     def productionRequestOrderStatus(order: Order, orderGateway: OrderGatewayInterface):
+        print(order.status)
         if order.status >= 4:
             raise Exception("Essa order já teve sua solicitação de produção feita.")
         

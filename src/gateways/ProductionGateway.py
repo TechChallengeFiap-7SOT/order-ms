@@ -17,6 +17,6 @@ class ProductionGateway(ProductionGatewayInterface):
                             order.status,
                             order.price)
         
-        productionStatus = self._productionExternal(orderDTO)
+        productionStatus = self._productionExternal.requestProductionAPi(orderDTO)
         
         return productionStatus

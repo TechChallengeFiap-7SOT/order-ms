@@ -17,4 +17,5 @@ class OrderAdapter(OrderAdapterInterface):
         }   
 
         
-        return json.dumps(value)
+        # return json.dumps(value)
+        return value
