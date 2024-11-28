@@ -18,14 +18,14 @@ class OrderUseCases:
                          OrderDTO.price)
         
         # try:
-        status = orderGateway.createOrder(newOrder.id, 
+        createdOrder = orderGateway.createOrder(newOrder.id, 
                                             newOrder.itens, 
                                             newOrder.status, 
                                             newOrder.price)
         # except():
         #     raise Exception("Houve um problema ao salvar uma ordem criada no repositório de dados.")
                 
-        return newOrder
+        return createdOrder
     
     @staticmethod
     def getORder(orderId: str, orderGateway: OrderGatewayInterface):

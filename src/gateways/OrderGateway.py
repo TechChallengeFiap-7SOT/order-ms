@@ -19,8 +19,9 @@ class OrderGateway(OrderGatewayInterface):
     
     def createOrder(self, id : str, itens : dict, status: int, price: int) -> Optional[Order]: 
         orderDto = OrderDTO(id, itens, status, price)
-        status = self._orderDb.create(orderDto)
-        return status
+        orderDtoDb = self._orderDb.create(orderDto)
+        order = Order(orderDtoDb.id, orderDtoDb.itens, orderDtoDb.status, orderDtoDb.price)
+        return order
     
     def deleteOrder(self, id: str) -> Optional[int]: 
         return True

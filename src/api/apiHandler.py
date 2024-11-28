@@ -7,6 +7,11 @@ from ..adapters.OrderAdapter import OrderAdapter
 
 from flask import Flask, jsonify, request
 
+from dotenv import load_dotenv
+import os
+
+# Carregar variáveis do arquivo .env
+load_dotenv()
 
 # Cria a aplicação Flask
 app = Flask(__name__)
@@ -29,7 +34,7 @@ class ApiHandler():
         order = OrderDTO(None, order_items, 0, order_price)
         
         orderDbConn = OrderDbConnector()
-        paymentApi = PaymentApi("localhost:5000/webhook")
+        paymentApi = PaymentApi(os.getenv("WEBHOOK_URL"))
         orderAdapter = OrderAdapter()
         
         response = OrderController.makeOrder(order,orderDbConn, paymentApi, orderAdapter)
@@ -49,13 +54,35 @@ class ApiHandler():
     
         
     @staticmethod
-    @app.route('/webhook/<orderId>', methods=['GET'])
+    @app.route('/webhook/<orderId>/confirm', methods=['GET'])
     def webhookApi(orderId):
         
-        orderDbConn = OrderDbConnector()
-        response = OrderController.confirmOrderPayment(orderId, orderDbConn)
+        try:
         
-        productionApi = ProductionApi()
-        response = OrderController.requestOrderProduction(orderId, orderDbConn, productionApi)
+            orderDbConn = OrderDbConnector()
+            response = OrderController.confirmOrderPayment(orderId, orderDbConn)
+            
+            productionApi = ProductionApi()
+            response = OrderController.requestOrderProduction(orderId, orderDbConn, productionApi)
+        
+        except Exception as error:
+            return jsonify({"error" : str(error)})
         
         return response
+
+    @staticmethod
+    @app.route('/payment/mock', methods=['POST'])
+    def paymentMockApi():
+        data = request.get_json()
+        print("URL de webhook recebida para o serviço de pagamento chamar:", data["order_webhook_url"])
+        
+        return jsonify({"ok" : 1})
+    
+    @staticmethod
+    @app.route('/production/mock', methods=['POST'])
+    def requestMockApi():
+        data = request.get_json()
+        print("Lista de itens que devo fazer:", data)
+        
+        return jsonify({"ok" : 1})
+        
