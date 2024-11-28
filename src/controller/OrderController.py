@@ -19,11 +19,11 @@ class OrderController:
                   orderAdapter: OrderAdapterInterface):
         
         orderGateway = OrderGateway(orderDb)
-        paymentGateway = PaymentGateway(paymentExternal)
+        # paymentGateway = PaymentGateway(paymentExternal)
         
         order = OrderUseCases.createOrder(orderDTO, orderGateway)
 
-        paymentStatus = PaymentUseCases.requestPayment(order, paymentGateway)
+        paymentStatus = OrderController.requestPayment(order.id, paymentExternal, orderDb)#PaymentUseCases.requestPayment(order, paymentGateway)
         
         order = OrderUseCases.pendentPaymentStatus(order, orderGateway)
         
@@ -32,6 +32,15 @@ class OrderController:
         response = orderAdapter.orderToJson(orderDTO)
         
         return response
+    
+    @staticmethod
+    def requestPayment(orderId: str, paymentExternal: PaymentExternalInterface, orderDb: OrderExternalInterface):
+        orderGateway = OrderGateway(orderDb)
+        order = OrderUseCases.getORder(orderId, orderGateway)
+        
+        paymentGateway = PaymentGateway(paymentExternal)
+        paymentStatus = PaymentUseCases.requestPayment(order, paymentGateway)
+        return paymentStatus
     
     @staticmethod
     def getOrder(orderId: str,

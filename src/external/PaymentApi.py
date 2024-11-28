@@ -24,8 +24,9 @@ class PaymentApi(PaymentExternalInterface):
         
         # Payload JSON
         payload = {
-            "order_price": price,
-            "order_webhook_url" : "{}/{}/confirm".format(self._webhookUrl, id)
+            "id_pedido" : id,
+            "valor": price,
+            "urlCallback" : "{}/{}".format(self._webhookUrl, id)
         }
         
         headers = {

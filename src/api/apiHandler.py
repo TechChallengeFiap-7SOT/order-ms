@@ -54,11 +54,24 @@ class ApiHandler():
     
         
     @staticmethod
-    @app.route('/webhook/<orderId>/confirm', methods=['GET'])
+    @app.route('/webhook/<orderId>', methods=['POST'])
     def webhookApi(orderId):
+        data = request.get_json()
+        
+        if not data or 'pagamento' not in data or 'id_pedido' not in data:
+            return jsonify({"error": "Invalid request, missing 'pagamento' or 'id_pedido'"}), 400
+        
+        order_payment_status = data['pagamento']
+        order_id = data['id_pedido']
+        
+        if order_payment_status == False:
+            paymentApi = PaymentApi(os.getenv("WEBHOOK_URL"))
+            orderDbConn = OrderDbConnector()
+
+            statusPayment = OrderController.requestPayment(orderId,paymentApi,orderDbConn)
+            return jsonify({"status" : "O pagamento foi recusado, fazendo uma nova requisição de pagamento..."})
         
         try:
-        
             orderDbConn = OrderDbConnector()
             response = OrderController.confirmOrderPayment(orderId, orderDbConn)
             
@@ -68,13 +81,13 @@ class ApiHandler():
         except Exception as error:
             return jsonify({"error" : str(error)})
         
-        return response
+        return jsonify(response)
 
     @staticmethod
     @app.route('/payment/mock', methods=['POST'])
     def paymentMockApi():
         data = request.get_json()
-        print("URL de webhook recebida para o serviço de pagamento chamar:", data["order_webhook_url"])
+        print("URL de webhook recebida para o serviço de pagamento chamar:", data["urlCallback"])
         
         return jsonify({"ok" : 1})
     
