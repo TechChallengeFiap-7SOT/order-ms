@@ -28,6 +28,7 @@ class PaymentApi(PaymentExternalInterface):
             "valor": price,
             "urlCallback" : "{}/{}".format(self._webhookUrl, id)
         }
+        print(payload["urlCallback"])
         
         headers = {
             "Content-Type": "application/json",

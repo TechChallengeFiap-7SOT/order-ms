@@ -57,12 +57,13 @@ class ApiHandler():
     @app.route('/webhook/<orderId>', methods=['POST'])
     def webhookApi(orderId):
         data = request.get_json()
+        print("Endpoint da webhook" , data)
         
-        if not data or 'pagamento' not in data or 'id_pedido' not in data:
+        if not data or 'pagamento' not in data :
             return jsonify({"error": "Invalid request, missing 'pagamento' or 'id_pedido'"}), 400
         
         order_payment_status = data['pagamento']
-        order_id = data['id_pedido']
+        # order_id = data['id_pedido']
         
         if order_payment_status == False:
             paymentApi = PaymentApi(os.getenv("WEBHOOK_URL"))
