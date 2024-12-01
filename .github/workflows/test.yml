@@ -32,7 +32,7 @@ jobs:
       # Execução dos testes com pytest
       - name: Run unit tests
         run: |
-          pytest --cov=src tests/
+          pytest --cov=src -m=pytests
 
       # (Opcional) Upload do relatório de cobertura para o Codecov
       # - name: Upload coverage to Codecov
