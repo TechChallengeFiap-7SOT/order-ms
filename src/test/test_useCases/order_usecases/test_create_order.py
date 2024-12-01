@@ -1,6 +1,6 @@
-from ...usecases.OrderUseCases import OrderUseCases
-from ...DTO.OrderDTO import OrderDTO
-from ...entities.Order import Order
+from ....usecases.OrderUseCases import OrderUseCases
+from ....DTO.OrderDTO import OrderDTO
+from ....entities.Order import Order
 from unittest.mock import Mock
 
 def test_create_order():
