@@ -16,3 +16,4 @@ def test_create_order():
     assert order.itens == itens
     assert order.status == orderStatus
     assert order.price == price
+

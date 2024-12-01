@@ -24,5 +24,3 @@ class Order:
     @property
     def price(self) -> int:
         return self._price
-        
-        
