@@ -1,0 +1,9 @@
+.env
+/testes.py
+/venv
+**/__pycache__/
+app.log
+
+data.db
+/.pytest_cache
+.coverage
