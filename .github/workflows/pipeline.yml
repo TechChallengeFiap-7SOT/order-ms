@@ -94,7 +94,7 @@ jobs:
           name: Build and push
           uses: docker/build-push-action@v6
           with:
-            context: .
+            # context: 
             push: true
             tags: piovezan1207/tech-challenge-order-ms:latest
   # push_to_registry:
