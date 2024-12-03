@@ -19,6 +19,8 @@ EXPOSE 80
 RUN python ./src/external/infra/dbCreate.py
 
 ENV DATABASE_URL="data.db"
+ENV PAYMENT_SERVICE_URL=https://lgsfb66sce.execute-api.us-east-1.amazonaws.com/payment
+ENV PRODUCTION_SERVICE_URL=https://lgsfb66sce.execute-api.us-east-1.amazonaws.com/register_pedidos
 
 # Run the command to start the Flask app
 # CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
