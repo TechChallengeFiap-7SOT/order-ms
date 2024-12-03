@@ -12,7 +12,7 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Make port 5000 available for the app
-EXPOSE 5000
+EXPOSE 80
 
 # ENV FLASK_APP=main.py
 
