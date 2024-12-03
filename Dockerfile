@@ -18,6 +18,8 @@ EXPOSE 80
 
 RUN python ./src/external/infra/dbCreate.py
 
+ENV DATABASE_URL="data.db"
+
 # Run the command to start the Flask app
 # CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
 CMD [ "python", "main.py" ]
