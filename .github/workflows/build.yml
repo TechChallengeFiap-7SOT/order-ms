@@ -39,7 +39,8 @@ jobs:
             # Execução dos testes com pytest
           - name: Run unit tests
             run: |
-                pytest --cov=src --cov-report=xml
+                pytest --cov=src 
+        #--cov-report=xml
                     
 
     sonarcloud:
