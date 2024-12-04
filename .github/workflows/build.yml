@@ -1,21 +1,14 @@
 name: Build
 on:
-  push:
+  pull_request:
     branches:
       - main
-  pull_request:
+      - master
     types: [opened, synchronize, reopened]
+
+
 jobs:
   
-    # coverage:
-    #     runs-on: ubuntu-latest
-    #     steps:
-    #       - name: Get Cover 
-    #         uses: orgoro/coverage@v3.2
-    #         with:
-    #             coverageFile: /test/coverage.xml
-    #             token: ${{ secrets.GITHUB_TOKEN }}
-
     unit-test:
         runs-on: ubuntu-latest
         

@@ -1,7 +1,7 @@
 name: pipeline
 
 on:
-  push:
+  merge:
     branches:
       - main
 
@@ -38,17 +38,9 @@ jobs:
         run: |
           pytest --cov=src
         
-  code-analisys:
-    runs-on: ubuntu-latest
-    needs: unit-test
-    
-    steps:
-    - run: |
-        echo "code-analisys"
-  
   push_to_registry:
       runs-on: ubuntu-latest
-      needs: code-analisys
+      needs: unit-test
       steps:
         -
           name: Set up QEMU
@@ -70,154 +62,18 @@ jobs:
             push: true
             tags: piovezan1207/tech-challenge-order-ms:latest
    
-  deploy-STG:
-    runs-on: ubuntu-latest
-    needs: push_to_registry
-    environment:
-      name: stg
-    
-    if: github.ref == 'refs/heads/develop'
-    steps:
-      - name: Deploy 
-        shell: bash
-        run: |
-          echo "Deploy STG"
-          
-  Smoketest:
-    runs-on: ubuntu-latest
-    needs: deploy-STG
-    
-    if: github.ref == 'refs/heads/develop'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy 
-        shell: bash
-        run: |
-          # sh 'src/main/scripts/smoketest.sh'
-          echo 'Smoketest'
-          
-  testeIntegrados:
-    runs-on: ubuntu-latest
-    needs: Smoketest
-    
-    if: github.ref == 'refs/heads/develop'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy 
-        shell: bash
-        run: |
-          # sh 'src/main/scripts/testeIntegrado.sh'
-          echo 'testeIntegrados'
-  
-  deploy-Pre:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/release'
-    environment:
-      name: pre
-    needs: push_to_registry
-    steps:
-      - name: Deploy 
-        shell: bash
-        run: |
-          echo "Deploy PRE"
-  
-  SmoketestPre:
-    runs-on: ubuntu-latest
-    needs: deploy-Pre
-    
-    if: github.ref == 'refs/heads/release'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy 
-        shell: bash
-        run: |
-          # sh 'src/main/scripts/smoketest.sh'          
-          echo 'SmoketestPre'          
-          
-  testeFuncionais:
-    runs-on: ubuntu-latest
-    needs: SmoketestPre
-    
-    if: github.ref == 'refs/heads/release'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy 
-        shell: bash
-        run: |
-          # sh 'src/main/scripts/testesFuncionais.sh'  
-          echo 'testeFuncionais'
-
   deploy-Prod:
     name: Deploy AWS Academy
     runs-on: ubuntu-latest
     needs: push_to_registry
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # - name: AWS Configure
-      #   uses: aws-actions/configure-aws-credentials@v4
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ID }}
-      #     aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-      #     aws-region: ${{ env.REGION_DEFAULT }}
-
-      # - name: Update Kube Config
-      #   run: aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }} --region ${{ env.REGION_DEFAULT }}
-
-      # - name: Kube Apply
-      #   run: |
-      #     kubectl rollout restart deployment lanchonete-deployment
-  
-  # deploy-azure:
-  #   needs: push_to_registry  
-  #   name: Deploy-azure
-  #   runs-on: ubuntu-latest
-  #   if: github.ref == 'refs/heads/main'    
-  #   environment:
-  #     name: AZURE-PRO        
-  #     url: https://devopsfiapapp.azurewebsites.net/
-  #   steps:
-  #      - name: Download JAR
-  #        uses: actions/download-artifact@v3
-  #        with:
-  #          name: artifact
-  #          path: target/  
-  #      - name: DeployAzure   
-  #        uses: azure/webapps-deploy@v2
-  #        with:
-  #           app-name: DevopsFiapApp
-  #           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} 
-  #           package: '${{ github.workspace }}/target/*.jar'
-
-  # deploy-aws:
-  #   needs: push_to_registry  
-  #   name: Deploy-aws
-  #   runs-on: ubuntu-latest
-  #  #if: github.ref == 'refs/heads/main'
-  #   environment:
-  #     name: AWS-PRO
-  #     url: http://devopsfiap-on-env1.eba-nababm5k.us-east-1.elasticbeanstalk.com/
-  #   steps:
-  #     - name: Download JAR
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: artifact
-  #         path: target/
-  #       #Deploy the artifact (JAR) into AWS Beanstalk
-  #     - name: Display structure of downloaded files
-  #       run: ls -R
-  #     - name: Deploy to EB
-  #       uses: einaregilsson/beanstalk-deploy@v21
-  #       with:
-  #         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #        # aws_session_token: ${{ secrets.AWS_SESSION_TOKEN }}
-  #         wait_for_environment_recovery: 90
-  #         use_existing_version_if_available: false
-  #         application_name: DevopsFiap-on
-  #         environment_name: devopsfiap-on-env1
-  #         version_label: ${{github.SHA}}
-  #         region: us-east-1
-  #         deployment_package: ./target/demo-0.0.2.7-SNAPSHOT.jar              
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ID }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+      - name: Download task definition
+        run: |
+          aws ecs update-service --cluster techChallengeClusterMs --service order-ms --force-new-deployment

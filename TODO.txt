@@ -1,2 +1,0 @@
-testar a implementação do banco de dados, finalizar a implementação do método getOrder no controller, terminar a API.
-
